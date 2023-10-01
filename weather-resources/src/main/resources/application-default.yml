@@ -1,0 +1,3 @@
+# swagger-ui custom path
+springdoc.swagger-ui.path=/weather/swagger-ui.html
+springdoc.show-actuator=true
