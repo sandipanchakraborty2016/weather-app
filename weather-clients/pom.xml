@@ -19,12 +19,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.weather.domains</groupId>
-            <artifactId>weather-domains</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.weather.commons</groupId>
             <artifactId>weather-commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
