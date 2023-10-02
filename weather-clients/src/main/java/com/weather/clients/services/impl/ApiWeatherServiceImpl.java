@@ -7,10 +7,13 @@ import com.weather.models.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import static com.weather.clients.config.ConfigConstants.API_WEATHER_APP_ID;
 import static com.weather.clients.config.ConfigConstants.FORECAST_BASE_URL;
+import static com.weather.commons.constants.ErrorConstants.BUSINESS_EXCEPTION;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
 @AllArgsConstructor
@@ -28,7 +31,15 @@ public class ApiWeatherServiceImpl implements ApiWeatherService {
                         .build())
                 .retrieve()
                 .bodyToMono(Root.class)
-                .onErrorResume(BusinessException.class,
-                        ex -> Mono.error(new BusinessException(ApiWeatherError.builder().errorCode("1001").build())));
+                .defaultIfEmpty(new Root())
+                .onErrorMap(RuntimeException.class, e -> new ResponseStatusException( BAD_REQUEST, e.getMessage()))
+                .onErrorResume(RuntimeException.class,
+                        ex -> Mono.error(new BusinessException(
+                                ApiWeatherError
+                                        .builder()
+                                        .errorName(BUSINESS_EXCEPTION.getErrorName())
+                                        .errorCode(String.valueOf(BUSINESS_EXCEPTION.getErrorCode()))
+                                        .errorMessage(BUSINESS_EXCEPTION.getErrorMessage())
+                                        .build())));
     }
 }

@@ -16,7 +16,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>com.weather.resources.WeatherApp</start-class>
+<!--        <start-class>com.weather.resources.WeatherApp</start-class>-->
     </properties>
     <dependencies>
         <dependency>

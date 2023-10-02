@@ -2,37 +2,23 @@ package com.weather.commons.constants;
 
 import lombok.Getter;
 
-import java.util.ResourceBundle;
+import java.util.UUID;
 
 @Getter
 public enum ErrorConstants {
-    BUSINESS_EXCEPTION( "BUSINESS_EXCEPTION", "1001", "BUSINESS_EXCEPTION" );
+    BUSINESS_EXCEPTION( "BUSINESS_EXCEPTION", "BUSINESS_EXCEPTION" ),
+    SYSTEM_EXCEPTION( "SYSTEM_EXCEPTION",  "BUSINESS_EXCEPTION" ),
+    GENERIC_ERROR( "GENERIC_ERROR",  "GENERIC_ERROR" ),
+    DATA_NOT_FOUND_EXCEPTION("DATA_NOT_FOUND_EXCEPTION","DATA_NOT_FOUND_EXCEPTION");
 
-    private String errorName;
-    private String errorCode;
-    private String errorMessage;
+    private final String errorName;
+    private final java.util.UUID errorCode;
+    private final String errorMessage;
 
-    ErrorConstants(String errorName, String errorCode, String errorMessage ) {
+    ErrorConstants(String errorName, String errorMessage ) {
         this.errorName = errorName;
-        this.errorCode = errorCode;
+        this.errorCode = UUID.randomUUID();
         this.errorMessage = errorMessage;
     }
 
-    public void setErrorCode( String errorCode ) {
-        this.errorCode = errorCode;
-    }
-
-    public void setErrorMessage( String errorMessage ) {
-        this.errorMessage = errorMessage;
-    }
-
-    public void setErrorName( String errorName ) {
-        this.errorName = errorName;
-    }
-
-
-    public static String getExceptionMessage( ErrorConstants errorCode ) {
-        ResourceBundle bundle = ResourceBundle.getBundle( "com.weather" );
-        return bundle.getString( errorCode.getErrorName() );
-    }
 }
