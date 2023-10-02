@@ -1,4 +1,37 @@
-#FROM openjdk:17-jdk-alpine
+FROM amazoncorretto:17
+
+RUN mkdir -p /usr/src/app/
+
+COPY ./*.* /usr/src/app/
+COPY weather-resources/*.* /usr/src/app/weather-resources/
+COPY weather-entities/*.* /usr/src/app/weather-entities/
+COPY weather-clients/*.* /usr/src/app/weather-clients/
+COPY weather-commons/*.* /usr/src/app/weather-commons/
+COPY weather-models/*.* /usr/src/app/weather-models/
+
+WORKDIR /usr/src/app
+
+RUN yum install -y tar which gzip # TODO remove
+
+# common for all images
+ENV MAVEN_HOME /usr/share/maven
+
+COPY --from=maven:3.9.4-eclipse-temurin-11 ${MAVEN_HOME} ${MAVEN_HOME}
+COPY --from=maven:3.9.4-eclipse-temurin-11 /usr/local/bin/mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
+COPY --from=maven:3.9.4-eclipse-temurin-11 /usr/share/maven/ref/settings-docker.xml /usr/share/maven/ref/settings-docker.xml
+
+RUN ln -s ${MAVEN_HOME}/bin/mvn /usr/bin/mvn
+
+ARG MAVEN_VERSION=3.9.4
+ARG USER_HOME_DIR="/root"
+ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+
+
+
+RUN mvn spring-boot:run
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+
+
 #ARG JAR_FILE=weather-resources/target/weather-resources-0.0.1-SNAPSHOT.jar
 #COPY ${JAR_FILE} app.jar
 ##ENTRYPOINT ["java","-cp","com.weather.resources.WeatherApp"]
