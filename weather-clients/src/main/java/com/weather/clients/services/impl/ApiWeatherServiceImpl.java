@@ -10,6 +10,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 import static com.weather.clients.config.ConfigConstants.API_WEATHER_APP_ID;
 import static com.weather.clients.config.ConfigConstants.FORECAST_BASE_URL;
 import static com.weather.commons.constants.ErrorConstants.BUSINESS_EXCEPTION;
@@ -31,6 +33,7 @@ public class ApiWeatherServiceImpl implements ApiWeatherService {
                         .build())
                 .retrieve()
                 .bodyToMono(Root.class)
+                .cache(Duration.ofMinutes(60))
                 .defaultIfEmpty(new Root())
                 .onErrorMap(RuntimeException.class, e -> new ResponseStatusException( BAD_REQUEST, e.getMessage()))
                 .onErrorResume(RuntimeException.class,

@@ -5,6 +5,7 @@ import com.weather.commons.validators.ApiWeatherValidator;
 import com.weather.models.Root;
 import com.weather.models.WeatherPredictionHelper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -23,8 +24,9 @@ public class WeatherAppServiceImpl implements WeatherAppService {
     private final ApiWeatherValidator validator;
 
     @Override
+    @Cacheable("weather")
     public Mono<List<WeatherPredictionHelper>> fetch(Integer size, String city) {
-        return apiWeatherService.fetchForecastForUpcomingDays(city,size).map(this::apply);
+        return apiWeatherService.fetchForecastForUpcomingDays(city,size).cache().map(this::apply);
     }
 
     private List<WeatherPredictionHelper> apply(Root body) {
