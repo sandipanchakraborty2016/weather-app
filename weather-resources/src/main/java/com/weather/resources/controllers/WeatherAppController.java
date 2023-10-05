@@ -1,11 +1,9 @@
 package com.weather.resources.controllers;
 
 import com.weather.models.WeatherPredictionHelper;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 public interface WeatherAppController {
 
-    Mono<List<WeatherPredictionHelper>>  fetch(Integer size, String city);
+    Flux<WeatherPredictionHelper> fetch(Integer size, String city);
 }

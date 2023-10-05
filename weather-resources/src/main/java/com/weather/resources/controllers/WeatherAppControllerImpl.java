@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping(value = "/weather")
@@ -33,7 +31,7 @@ public class WeatherAppControllerImpl implements WeatherAppController{
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
             @ApiResponse(responseCode = "404", description = "Invalid Url", content = @Content)})
     @GetMapping("/{city}/{size}")
-    public Mono<List<WeatherPredictionHelper>> fetch(
+    public Flux<WeatherPredictionHelper> fetch(
             @Parameter(description = "Enter number of entries")  @PathVariable Integer size,
             @Parameter(description = "Enter name of city")  @PathVariable String city) {
         return weatherAppService.fetch(size, city);

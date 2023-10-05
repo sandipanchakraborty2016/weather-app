@@ -9,8 +9,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
 import java.util.List;
 
 @Service
@@ -25,8 +28,9 @@ public class WeatherAppServiceImpl implements WeatherAppService {
 
     @Override
     @Cacheable("weather")
-    public Mono<List<WeatherPredictionHelper>> fetch(Integer size, String city) {
-        return apiWeatherService.fetchForecastForUpcomingDays(city,size).cache().map(this::apply);
+    public Flux<WeatherPredictionHelper> fetch(Integer size, String city) {
+        return apiWeatherService.fetchForecastForUpcomingDays(city, size).cache()
+                .map(this::apply).flatMapMany(Flux::fromIterable).retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(3)));
     }
 
     private List<WeatherPredictionHelper> apply(Root body) {
