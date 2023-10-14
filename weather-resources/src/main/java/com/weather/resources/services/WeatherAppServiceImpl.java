@@ -39,7 +39,6 @@ public class WeatherAppServiceImpl implements WeatherAppService {
         return apiWeatherService.fetchForecastForUpcomingDays(city, size).cache()
                 .map(this::apply).flatMapMany(Flux::fromIterable)
                 .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(3)))
-                .doOnError((e)->log.error(e.getMessage()))
                 .onErrorResume(RuntimeException.class,
                         ex -> Mono.error(new BusinessException(
                                 ApiWeatherError
