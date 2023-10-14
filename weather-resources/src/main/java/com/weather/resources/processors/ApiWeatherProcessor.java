@@ -1,4 +1,4 @@
-package com.weather.resources.services;
+package com.weather.resources.processors;
 
 import com.weather.commons.strategies.RainOrThunderstormStrategy;
 import com.weather.commons.strategies.TemperatureStrategy;

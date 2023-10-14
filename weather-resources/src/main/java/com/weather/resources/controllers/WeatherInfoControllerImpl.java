@@ -1,7 +1,9 @@
 package com.weather.resources.controllers;
 
+import com.weather.models.WeatherInfoDto;
 import com.weather.models.WeatherPredictionHelper;
 import com.weather.resources.services.WeatherAppService;
+import com.weather.resources.services.WeatherInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping(value = "/weather")
+@RequestMapping(value = "/weatherinfo")
 @RequiredArgsConstructor
-@Tag(name = "Weather API")
-public class WeatherAppControllerImpl implements WeatherAppController {
+@Tag(name = "Weather Info API")
+public class WeatherInfoControllerImpl implements WeatherInfoController {
 
-    private final WeatherAppService weatherAppService;
+    private final WeatherInfoService weatherInfoService;
 
     @Operation(summary = "Fetch weather information from https://api.openweathermap.org")
     @ApiResponses(value = {
@@ -28,10 +30,12 @@ public class WeatherAppControllerImpl implements WeatherAppController {
             @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content),
             @ApiResponse(responseCode = "404", description = "Invalid Url", content = @Content)})
     @GetMapping
-    public Flux<WeatherPredictionHelper> fetch(
+    public Flux<WeatherInfoDto> fetch(
             @Parameter(description = "Enter number of entries") @RequestParam(name = "size") Integer size,
-            @Parameter(description = "Enter name of city") @RequestParam(name = "city") String city) {
-        return weatherAppService.fetch(size, city);
+            @Parameter(description = "Enter name of city") @RequestParam(name = "city") String city,
+            @Parameter(description = "Enter page number") @RequestParam(name = "page") Integer pageNo) {
+        return weatherInfoService.fetch(pageNo, size, city);
     }
-}
 
+
+}

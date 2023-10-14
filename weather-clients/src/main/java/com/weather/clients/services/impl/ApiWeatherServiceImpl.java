@@ -35,7 +35,6 @@ public class ApiWeatherServiceImpl implements ApiWeatherService {
                 .bodyToMono(Root.class)
                 .cache(Duration.ofMinutes(60))
                 .defaultIfEmpty(new Root())
-                .onErrorMap(RuntimeException.class, e -> new ResponseStatusException( BAD_REQUEST, e.getMessage()))
                 .onErrorResume(RuntimeException.class,
                         ex -> Mono.error(new BusinessException(
                                 ApiWeatherError
